@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,16 +6,65 @@ import {
   Image,
   Text,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import { Feather as Icon, FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { RectButton } from 'react-native-gesture-handler';
+import * as MailComposer from 'expo-mail-composer';
+
+import api from '../../services/api';
+
+interface Params {
+  pointId: number;
+}
+
+interface Data {
+  point: {
+    name: string;
+    image: string;
+    email: string;
+    whatsapp: string;
+    city: string;
+    uf: string;
+    latitude: number;
+    longitude: number;
+  };
+  items: {
+    title: string;
+  }[];
+}
 
 const Detail = () => {
+  const [data, setData] = useState({} as Data);
+
   const navigation = useNavigation();
+  const route = useRoute();
+  const routeParams = route.params as Params;
+
+  useEffect(() => {
+    api.get(`points/${routeParams.pointId}`).then((response) => {
+      setData(response.data);
+    });
+  }, []);
 
   function handleNavigateBack() {
     navigation.goBack();
+  }
+
+  function handleWhatsapp() {
+    Linking.openURL(`whatsapp://send?phone=${data.point.whatsapp}`);
+  }
+
+  function handleComposeMail() {
+    MailComposer.composeAsync({
+      subject: 'Interesse na coleta de resíduos',
+      recipients: [data.point.email],
+    });
+  }
+
+  if (!data.point) {
+    return null;
   }
 
   return (
@@ -28,24 +77,27 @@ const Detail = () => {
         <Image
           style={styles.pointImage}
           source={{
-            uri:
-              'https://image.shutterstock.com/image-vector/square-grunge-black-example-stamp-260nw-647778754.jpg',
+            uri: data.point.image,
           }}
         />
-        <Text style={styles.pointName}>Ponto de Teste</Text>
-        <Text style={styles.pointItems}>Itens de teste</Text>
+        <Text style={styles.pointName}>{data.point.name}</Text>
+        <Text style={styles.pointItems}>
+          {data.items.map((item) => item.title).join(', ')}
+        </Text>
 
         <View style={styles.address}>
           <Text style={styles.addressTitle}>Endereço</Text>
-          <Text style={styles.addressContent}>Moczinha</Text>
+          <Text style={styles.addressContent}>
+            {data.point.city}, {data.point.uf}
+          </Text>
         </View>
       </View>
       <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={() => {}}>
+        <RectButton style={styles.button} onPress={handleWhatsapp}>
           <FontAwesome name="whatsapp" size={20} color="#FFF" />
           <Text style={styles.buttonText}>Whatsapp</Text>
         </RectButton>
-        <RectButton style={styles.button} onPress={() => {}}>
+        <RectButton style={styles.button} onPress={handleComposeMail}>
           <Icon name="mail" size={20} color="#FFF" />
           <Text style={styles.buttonText}>E-mail</Text>
         </RectButton>
