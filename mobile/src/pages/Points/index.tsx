@@ -1,8 +1,90 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+  Image,
+} from 'react-native';
+import { Feather as Icon } from '@expo/vector-icons';
+import Constants from 'expo-constants';
+import { useNavigation } from '@react-navigation/native';
+import MapView, { Marker } from 'react-native-maps';
+import { SvgUri } from 'react-native-svg';
 
 const Points = () => {
-  return <View />;
+  const navigation = useNavigation();
+
+  function handleNavigateBack() {
+    navigation.goBack();
+  }
+
+  function handleNavigateToDetail() {
+    navigation.navigate('Detail');
+  }
+
+  return (
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={handleNavigateBack}>
+          <Icon name="arrow-left" size={20} color="#34cb79" />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>Bem vindo.</Text>
+        <Text style={styles.description}>
+          Encontre no mapa um ponto de coleta.
+        </Text>
+
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: -16.6813013,
+              longitude: -43.8386565,
+              latitudeDelta: 0.013,
+              longitudeDelta: 0.013,
+            }}
+          >
+            <Marker
+              style={styles.mapMarker}
+              coordinate={{ latitude: -16.6813013, longitude: -43.8386565 }}
+              onPress={handleNavigateToDetail}
+            >
+              <View style={styles.mapMarkerContainer}>
+                <Image
+                  style={styles.mapMarkerImage}
+                  source={{
+                    uri:
+                      'https://image.shutterstock.com/image-vector/square-grunge-black-example-stamp-260nw-647778754.jpg',
+                  }}
+                />
+                <Text style={styles.mapMarkerTitle}>Teste</Text>
+              </View>
+            </Marker>
+          </MapView>
+        </View>
+      </View>
+      <View style={styles.itemsContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+          }}
+        >
+          <TouchableOpacity style={styles.item} onPress={() => {}}>
+            <SvgUri
+              width={42}
+              height={42}
+              uri="https://image.shutterstock.com/image-vector/square-grunge-black-example-stamp-260nw-647778754.jpg"
+            />
+            <Text style={styles.itemTitle}>Teste</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    </>
+  );
 };
 
 export default Points;
@@ -11,7 +93,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 32,
-    paddingTop: 20,
+    paddingTop: 20 + Constants.statusBarHeight,
   },
 
   title: {
