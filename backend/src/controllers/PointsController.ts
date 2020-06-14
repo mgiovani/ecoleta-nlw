@@ -7,7 +7,14 @@ class PointsController {
 
     if (!city && !uf && !items) {
       const allPoints = await knex('points').select('*');
-      return response.json(allPoints);
+
+      const serializedPoints = allPoints.map((point) => {
+        return {
+          ...point,
+          image_url: `http://localhost:3333/uploads/points/${point.image}`,
+        };
+      });
+      return response.json(serializedPoints);
     }
 
     const parsedItems = String(items)
@@ -22,7 +29,14 @@ class PointsController {
       .distinct()
       .select('points.*');
 
-    return response.json(points);
+    const serializedPoints = points.map((point) => {
+      return {
+        ...point,
+        image_url: `http://localhost:3333/uploads/points/${point.image}`,
+      };
+    });
+
+    return response.json(serializedPoints);
   }
 
   async show(request: Request, response: Response) {
@@ -35,11 +49,16 @@ class PointsController {
       });
     }
 
+    const serializedPoint = {
+      ...point,
+      image_url: `http://localhost:3333/uploads/points/${point.image}`,
+    };
+
     const items = await knex('items')
       .join('point_items', 'items.id', '=', 'point_items.item_id')
       .where('point_items.point_id', id);
 
-    return response.json({ point, items });
+    return response.json({ point: serializedPoint, items });
   }
 
   async create(request: Request, response: Response) {
@@ -47,7 +66,6 @@ class PointsController {
 
     const {
       name,
-      image,
       email,
       whatsapp,
       latitude,
@@ -59,7 +77,7 @@ class PointsController {
 
     const point = {
       name,
-      image,
+      image: request.file.filename,
       email,
       whatsapp,
       latitude,
@@ -70,12 +88,15 @@ class PointsController {
 
     const insertedIds = await transaction('points').insert(point);
     const point_id = insertedIds[0];
-    const pointItems = items.map((item_id: number) => {
-      return {
-        item_id,
-        point_id,
-      };
-    });
+    const pointItems = items
+      .split(',')
+      .map((item: String) => Number(item.trim()))
+      .map((item_id: number) => {
+        return {
+          item_id,
+          point_id,
+        };
+      });
     await transaction('point_items').insert(pointItems);
 
     await transaction.commit();
