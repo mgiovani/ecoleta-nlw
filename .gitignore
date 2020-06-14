@@ -1,5 +1,7 @@
-# Database
+# Custom
 *.sqlite
+*/uploads/points*
+
 # Logs
 logs
 *.log
