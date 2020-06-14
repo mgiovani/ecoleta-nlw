@@ -28,6 +28,7 @@ const Home = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={{ flex: 1 }}
     >
       <ImageBackground
         source={background}
