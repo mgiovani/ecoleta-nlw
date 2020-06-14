@@ -8,7 +8,7 @@ Ecoleta is a project developed based on the international environment week.
 This project aims to connect people to companies that collect specific waste such as light bulbs, batteries, and cooking oil.
 
 <h1 align="center">
-    <img alt="Mockup Image" title="Mockup Image" src=".github/mockup.svg" width="500px" />
+    <img alt="Home" src=".github/home.PNG" />
 </h1>
 
 ## Technologies
@@ -73,6 +73,15 @@ $ make run
 
 # Expo will open, just scan the qrcode on terminal or expo page
 ```
+
+## More Screenshots
+
+<h1 align="center">
+    <img alt="Point1" src=".github/point1.PNG" />
+    <img alt="Point2" src=".github/point2.PNG" />
+    <img alt="Mobile1" src=".github/mobile1.PNG" width="400" />
+    <img alt="Mobile2" src=".github/mobile2.PNG" width="400" />
+</h1>
 
 [nodejs]: https://nodejs.org/
 [express]: https://github.com/expressjs/express
