@@ -4,8 +4,8 @@
 
 ## Project
 
-Ecoleta is a project developed based on the international environment week.  
-This project aims to connect people to companies that collect specific waste such as light bulbs, batteries, and cooking oil.
+Ecoleta is a project developed based on international environment week.  
+This project aims to connect people to companies that collect specific waste, such as light bulbs, batteries, and cooking oil.
 
 <h1 align="center">
     <img alt="Home" src=".github/home.PNG" />
@@ -71,7 +71,7 @@ $ make install
 # Run
 $ make run
 
-# Expo will open, just scan the qrcode on terminal or expo page
+# Expo will open. Scan the QRcode on the terminal or expo page
 ```
 
 ## More Screenshots
